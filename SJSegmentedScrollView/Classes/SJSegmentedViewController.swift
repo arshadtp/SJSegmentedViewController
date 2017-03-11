@@ -68,7 +68,16 @@ import UIKit
             segmentedScrollView.headerViewHeight = headerViewHeight
         }
     }
-    
+	
+	/**
+	*  Set Background Image for segment view.
+	*/
+	open var segmentBackgroundImage: UIImage?  {
+		didSet {
+			segmentedScrollView.segmentBackgroundImage = segmentBackgroundImage
+		}
+	}
+
     /**
      *  Set height for segment view.
      *
@@ -231,7 +240,7 @@ import UIKit
 
     open var delegate:SJSegmentedViewControllerDelegate?
     var viewObservers = [UIView]()
-    var segmentedScrollView = SJSegmentedScrollView(frame: CGRect.zero)
+	var segmentedScrollView = SJSegmentedScrollView(frame: CGRect.zero)
     var segmentScrollViewTopConstraint: NSLayoutConstraint?
     
     

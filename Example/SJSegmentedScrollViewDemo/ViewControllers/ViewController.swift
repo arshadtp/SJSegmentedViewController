@@ -44,13 +44,15 @@ class ViewController: SJSegmentedViewController {
 			                           thirdViewController!,
 			                           fourthViewController]
 			headerViewHeight = 200
-			selectedSegmentViewHeight = 5.0
+			selectedSegmentViewHeight = 2.0
 			segmentTitleColor = .gray
-			selectedSegmentViewColor = .red
+			selectedSegmentViewColor = .blue
 			segmentShadow = SJShadow.light()
 			segmentViewHeight = 100
-			segmentBackgroundColor = UIColor.lightGray
+			segmentBackgroundColor = UIColor.clear
 			delegate = self
+			segmentBackgroundImage = #imageLiteral(resourceName: "image3.JPG")
+
 		}
 
 		title = "Segment"

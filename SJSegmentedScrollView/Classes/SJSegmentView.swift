@@ -23,7 +23,8 @@
 import UIKit
 
 class SJSegmentView: UIScrollView {
-    
+	
+	open var segmentBackgroundImage: UIImage?
     var selectedSegmentViewColor: UIColor? {
         didSet {
             selectedSegmentViewTop?.backgroundColor = selectedSegmentViewColor
@@ -143,7 +144,8 @@ class SJSegmentView: UIScrollView {
         }
         
         createSelectedSegmentView(segmentWidth)
-        
+		setBackGroundImageForSegmentContentView()
+
         //Set first button as selected
         let button = segments.first!
         button.isSelected = true
@@ -391,4 +393,26 @@ class SJSegmentView: UIScrollView {
             layoutIfNeeded()
         }
     }
+	func setBackGroundImageForSegmentContentView() {
+		let imageView = UIImageView()
+		imageView.contentMode = .scaleAspectFill
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.image = segmentBackgroundImage
+		segmentContentView?.addSubview(imageView)
+		segmentContentView?.sendSubview(toBack: imageView)
+		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[imageView]-0-|",
+		                                                           options: [],
+		                                                           metrics: nil,
+		                                                           views: ["imageView": imageView])
+		segmentContentView?.addConstraints(horizontalConstraints)
+		
+		
+		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[imageView]-0-|",
+		                                                         options: [],
+		                                                         metrics: nil,
+		                                                         views: ["imageView": imageView])
+		segmentContentView?.addConstraints(verticalConstraints)
+		segmentContentView?.clipsToBounds = true
+		
+	}
 }

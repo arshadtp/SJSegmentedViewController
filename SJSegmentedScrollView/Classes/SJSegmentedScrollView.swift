@@ -23,7 +23,8 @@
 import UIKit
 
 class SJSegmentedScrollView: UIScrollView {
-    
+
+	var segmentBackgroundImage: UIImage?
     var segmentView: SJSegmentView?
     var headerViewHeight: CGFloat! = 0
     var segmentViewHeight: CGFloat! = 0
@@ -177,6 +178,7 @@ class SJSegmentedScrollView: UIScrollView {
 			segmentView?.controllers					= controllers
             segmentView?.selectedSegmentViewColor		= selectedSegmentViewColor
             segmentView?.selectedSegmentViewHeight		= selectedSegmentViewHeight!
+			segmentView?.segmentBackgroundImage			= segmentBackgroundImage
             segmentView?.titleColor						= segmentTitleColor
             segmentView?.segmentBackgroundColor			= segmentBackgroundColor
             segmentView?.font							= segmentTitleFont!

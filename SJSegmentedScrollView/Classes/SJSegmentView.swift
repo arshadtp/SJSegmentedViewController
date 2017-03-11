@@ -26,10 +26,11 @@ class SJSegmentView: UIScrollView {
     
     var selectedSegmentViewColor: UIColor? {
         didSet {
-            selectedSegmentView?.backgroundColor = selectedSegmentViewColor
+            selectedSegmentViewTop?.backgroundColor = selectedSegmentViewColor
+			selectedSegmentViewBottom?.backgroundColor = selectedSegmentViewColor
         }
     }
-    
+	
     var titleColor: UIColor? {
         didSet {
             for segment in segments {
@@ -65,8 +66,12 @@ class SJSegmentView: UIScrollView {
     var segments = [SJSegmentTab]()
     var segmentContentView: UIView?
     var didSelectSegmentAtIndex: DidSelectSegmentAtIndex?
-    var selectedSegmentView: UIView?
+    var selectedSegmentViewTop: UIView?
+	var selectedSegmentViewBottom: UIView?
+
     var xPosConstraints: NSLayoutConstraint?
+	var xPosConstraintsBottom: NSLayoutConstraint?
+
     var contentViewWidthConstraint: NSLayoutConstraint?
     var selectedSegmentViewWidthConstraint: NSLayoutConstraint?
     var contentSubViewWidthConstraints = [NSLayoutConstraint]()
@@ -222,13 +227,19 @@ class SJSegmentView: UIScrollView {
     
     func createSelectedSegmentView(_ width: CGFloat) {
         
-        let segmentView = UIView()
-        segmentView.backgroundColor = selectedSegmentViewColor
-        segmentView.translatesAutoresizingMaskIntoConstraints = false
-        segmentContentView!.addSubview(segmentView)
-        selectedSegmentView = segmentView
-        
-        xPosConstraints = NSLayoutConstraint(item: segmentView,
+        let segmentViewTop = UIView()
+        segmentViewTop.backgroundColor = selectedSegmentViewColor
+        segmentViewTop.translatesAutoresizingMaskIntoConstraints = false
+        segmentContentView!.addSubview(segmentViewTop)
+        selectedSegmentViewTop = segmentViewTop
+		
+		let segmentViewBottom = UIView()
+		segmentViewBottom.backgroundColor = selectedSegmentViewColor
+		segmentViewBottom.translatesAutoresizingMaskIntoConstraints = false
+		segmentContentView!.addSubview(segmentViewBottom)
+		selectedSegmentViewBottom = segmentViewBottom
+		
+        xPosConstraints = NSLayoutConstraint(item: segmentViewTop,
                                              attribute: .leading,
                                              relatedBy: .equal,
                                              toItem: segmentContentView!,
@@ -236,22 +247,49 @@ class SJSegmentView: UIScrollView {
                                              multiplier: 1.0,
                                              constant: 0.0)
         segmentContentView!.addConstraint(xPosConstraints!)
-        
+		
+		xPosConstraintsBottom = NSLayoutConstraint(item: segmentViewBottom,
+		                                     attribute: .leading,
+		                                     relatedBy: .equal,
+		                                     toItem: segmentContentView!,
+		                                     attribute: .leading,
+		                                     multiplier: 1.0,
+		                                     constant: 0.0)
+		segmentContentView!.addConstraint(xPosConstraintsBottom!)
+
+		
         let segment = segments.first
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[view(==segment)]",
+        var horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[view(==segment)]",
                                                                                    options: [],
                                                                                    metrics: nil,
-                                                                                   views: ["view": segmentView,
+                                                                                   views: ["view": segmentViewTop,
                                                                                     "segment": segment!])
         segmentContentView!.addConstraints(horizontalConstraints)
-        
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[view(height)]|",
+		
+		horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[view(==segment)]",
+		                                                           options: [],
+		                                                           metrics: nil,
+		                                                           views: ["view": segmentViewBottom,
+		                                                                   "segment": segment!])
+		segmentContentView!.addConstraints(horizontalConstraints)
+
+		let button = segments.first!
+
+        var verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=30)-[view(height)]",
                                                                                  options: [],
-                                                                                 metrics: ["height": selectedSegmentViewHeight!],
-                                                                                 views: ["view": segmentView])
+                                                                                 metrics: ["height":selectedSegmentViewHeight!],
+                                                                                 views: ["view": segmentViewTop])
         segmentContentView!.addConstraints(verticalConstraints)
+		
+		
+		verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[view(height)]-(>=30)-|",
+		                                                         options: [],
+		                                                         metrics: ["height":selectedSegmentViewHeight!],
+		                                                         views: ["view": segmentViewBottom])
+		segmentContentView!.addConstraints(verticalConstraints)
+
     }
-    
+	
     func getSegmentTabForController(_ controller: UIViewController) -> SJSegmentTab {
 
 		var segmentTab: SJSegmentTab?
@@ -320,7 +358,8 @@ class SJSegmentView: UIScrollView {
                     let value = (scrollView?.contentOffset.x)! / changeOffset
                     
                     if !value.isNaN {
-                        selectedSegmentView?.frame.origin.x = (scrollView?.contentOffset.x)! / changeOffset
+						selectedSegmentViewTop?.frame.origin.x = (scrollView?.contentOffset.x)! / changeOffset
+						selectedSegmentViewBottom?.frame.origin.x = (scrollView?.contentOffset.x)! / changeOffset
                     }
                     
                     //update segment offset x position
@@ -345,9 +384,10 @@ class SJSegmentView: UIScrollView {
         
         let changeOffset = (contentView?.contentSize.width)! / contentSize.width
         let value = (contentView?.contentOffset.x)! / changeOffset
-        
+		
         if !value.isNaN {
-            xPosConstraints!.constant = (selectedSegmentView?.frame.origin.x)!
+			xPosConstraints!.constant = (selectedSegmentViewTop?.frame.origin.x)!
+			xPosConstraintsBottom!.constant = (selectedSegmentViewTop?.frame.origin.x)!
             layoutIfNeeded()
         }
     }

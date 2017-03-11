@@ -82,6 +82,7 @@ public class SJSegmentTab: UIView {
 	public func titleColor(_ color: UIColor) {
 
 		button.setTitleColor(color, for: .normal)
+		self.backgroundColor = UIColor.green;
 	}
 
 	public func titleFont(_ font: UIFont) {

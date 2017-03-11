@@ -48,6 +48,7 @@ class ViewController: SJSegmentedViewController {
 			segmentTitleColor = .gray
 			selectedSegmentViewColor = .red
 			segmentShadow = SJShadow.light()
+			segmentViewHeight = 100
 			delegate = self
 		}
 
